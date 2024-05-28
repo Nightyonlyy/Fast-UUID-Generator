@@ -1,22 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
+  const [uuid, setUuid] = useState('');
+  const [copySuccess, setCopySuccess] = useState('');
+
+  const generateUUID = () => {
+    const newUuid = uuidv4();
+    setUuid(newUuid);
+    setCopySuccess('');
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(uuid).then(() => {
+      setCopySuccess('UUID copied!');
+      setTimeout(() => setCopySuccess(''), 2000);
+    });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Generate your UUID
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className="App-body">
+          <p>Generated UUID:</p>
+          <div className="uuid-container"></div>
+          <button className="button" onClick={copyToClipboard}>{uuid}</button>
+        </div>
+        <button className="button" onClick={generateUUID}>Generate UUID</button>
+        {copySuccess && <div className="copy-message">{copySuccess}</div>}
       </header>
     </div>
   );
